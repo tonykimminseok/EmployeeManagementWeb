@@ -17,6 +17,7 @@ namespace EmployeeManagementWebAPI.Controllers
             _configuration = configuration;
         }
 
+        // To Get all Departments from Database
         [HttpGet]
         public JsonResult GetAllDepartments()
         {
