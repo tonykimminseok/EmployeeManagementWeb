@@ -18,7 +18,7 @@ namespace EmployeeManagementWebAPI.Controllers
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public JsonResult GetAllDepartments()
         {
             /*
              * this is raw queries from the tutorial video,
