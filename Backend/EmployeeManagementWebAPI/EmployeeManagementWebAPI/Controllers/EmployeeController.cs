@@ -9,18 +9,18 @@ namespace EmployeeManagementWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DepartmentController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public DepartmentController(IConfiguration configuration)
+        public EmployeeController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        // To Get all Departments from Database
+        // To Get all Employee from Database
         [HttpGet]
-        public JsonResult GetAllDepartments()
+        public JsonResult GetAllEmployees()
         {
             /*
               this is raw queries from the tutorial video,
@@ -29,10 +29,10 @@ namespace EmployeeManagementWebAPI.Controllers
               entity framework to connect to database
              */
             string query = @"SELECT
-                                DepartmentId, DepartmentName
+                                EmployeeId, EmployeeName, Department, CONVERT(VARCHAR(10), DateOfJoining, 120) as DateOfJoining, PhotoFileName
                             
                              FROM
-                                dbo.Department";
+                                dbo.Employee";
 
             // Creating/Declaring memory for a new DataTable object 
             DataTable table = new DataTable();
@@ -44,13 +44,13 @@ namespace EmployeeManagementWebAPI.Controllers
             SqlDataReader myReader;
 
             // Constructing/Creating a new SqlConnection object and using the connection string
-            using (SqlConnection myCon=new SqlConnection(sqlDataSource))
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 // opening the connection string
                 myCon.Open();
                 // Constructing/Creating a new SqlCommand object with the connection string and the query above
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {   
+                {
                     // executing the command and storing it into myReader, SqlDataReader
                     myReader = myCommand.ExecuteReader();
 
@@ -69,17 +69,22 @@ namespace EmployeeManagementWebAPI.Controllers
 
         }
 
-        // To Insert a Department data (object) to Database
+        // To Insert a Employee data (object) to Database
         [HttpPost]
-        public JsonResult Post(Department department)
+        public JsonResult Post(Employee employee)
         {
             /*
                 Query statement for Inserting data
              */
-            string query = @"INSERT INTO dbo.Department VALUES (
-                            '"+department.DepartmentName+@"'
+            string query = @"INSERT INTO dbo.Employee 
+                            (EmployeeName, Department, DateOfJoining, PhotoFileName)
+                            VALUES (
+                            '" + employee.EmployeeName + @"',
+                            '" + employee.Department + @"',
+                            '" + employee.DateOfJoining + @"',
+                            '" + employee.PhotoFileName + @"'
                             )";
-            
+
             // Creating a memory for DataTable
             DataTable table = new DataTable();
 
@@ -111,21 +116,23 @@ namespace EmployeeManagementWebAPI.Controllers
             }
 
 
-            return new JsonResult("POST Department successfully operated.");
+            return new JsonResult("POST Employee successfully operated.");
 
         }
 
-        // To Update a Department data (object) to Database
+        // To Update a Employee data (object) to Database
         [HttpPut]
-        public JsonResult Put(Department department)
+        public JsonResult Put(Employee employee)
         {
             /*
                 Query statement for Updating data
              */
             string query = @"
-                            UPDATE dbo.Department set
-                            DepartmentName = '" + department.DepartmentName + @"'
-                            WHERE DepartmentId = " + department.DepartmentId + @"";
+                            UPDATE dbo.Employee set
+                            EmployeeName = '" + employee.EmployeeName + @"',
+                            Department = '" + employee.Department + @"',
+                            DateOfJoining = '" + employee.DateOfJoining + @"'
+                            WHERE EmployeeId = " + employee.EmployeeId + @"";
 
             // Creating a memory for DataTable
             DataTable table = new DataTable();
