@@ -22,7 +22,7 @@ export class SharedService {
   }
 
   addDepartment(val: any) {
-    return this.http.post(this.APIUrl + '/department', val);
+    return this.http.post(this.APIUrl + '/Department', val);
   }
 
   updateDepartment(val: any) {
