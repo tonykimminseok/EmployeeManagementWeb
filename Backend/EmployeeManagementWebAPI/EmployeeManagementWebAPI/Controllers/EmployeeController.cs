@@ -11,11 +11,15 @@ namespace EmployeeManagementWebAPI.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        // Dependency Injection to get Connection String
         private readonly IConfiguration _configuration;
 
-        public EmployeeController(IConfiguration configuration)
+        // Dependency Injection to get application Path into this folder
+        private readonly IWebHostEnvironment _env;
+        public EmployeeController(IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
+            _env = env;
         }
 
         // To Get all Employee from Database
@@ -167,6 +171,30 @@ namespace EmployeeManagementWebAPI.Controllers
 
             return new JsonResult("PUT Department successfully operated.");
 
+        }
+
+        [Route("SaveFile")]
+        [HttpPost]
+        public JsonResult SaveFile()
+        {
+            try
+            {
+                var httpRequest = Request.Form;
+                var postedFile = httpRequest.Files[0];
+                string fileName = postedFile.FileName;
+                var PhysicalPath = _env.ContentRootPath + "/Photos/" + fileName;
+
+                using(var stream = new FileStream(PhysicalPath, FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                }
+
+                return new JsonResult(fileName);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("anonymous.png"); 
+            }
         }
     }
 }

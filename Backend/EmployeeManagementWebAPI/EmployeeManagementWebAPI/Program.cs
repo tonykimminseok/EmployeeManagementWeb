@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.FileProviders;
 
 // Declaring/Defining the name of the CORS Policy/Origin
 var myCORSPolicy = "AllowOrigin";
@@ -41,5 +42,11 @@ app.UseCors(myCORSPolicy);
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Photos")),
+    RequestPath = "/Photos"
+});
 
 app.Run();
