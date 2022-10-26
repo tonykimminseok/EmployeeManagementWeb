@@ -78,10 +78,7 @@ namespace EmployeeManagementWebAPI.Controllers
              */
             string query = @"INSERT INTO dbo.Department VALUES (
                             '"+department.DepartmentName+@"'
-                            ) 
-
-
-                            ";
+                            )";
             
             // Creating a memory for DataTable
             DataTable table = new DataTable();
