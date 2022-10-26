@@ -114,5 +114,52 @@ namespace EmployeeManagementWebAPI.Controllers
             return new JsonResult("POST Department successfully operated.");
 
         }
+
+        // To Update a Department data (object) to Database
+        [HttpPut]
+        public JsonResult Put(Department department)
+        {
+            /*
+                Query statement for Updating data
+             */
+            string query = @"
+                            UPDATE dbo.Department set
+                            DepartmentName = '" + department.DepartmentName + @"'
+                            WHERE DepartmentId = " + department.DepartmentId + @"";
+
+            // Creating a memory for DataTable
+            DataTable table = new DataTable();
+
+            // Getting the connection string
+            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
+
+            // Creating a memory for SqlDataReader for storing a result of sql command
+            SqlDataReader myReader;
+
+            // Constructing/Creating a new SqlConnection object and using the connection string
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                // opening the connection string
+                myCon.Open();
+                // Constructing/Creating a new SqlCommand object with the connection string and the query above
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    // executing the command and storing it into myReader, SqlDataReader
+                    myReader = myCommand.ExecuteReader();
+
+                    // Loading the result of the Sql Command to the data table
+                    table.Load(myReader);
+
+                    // Everything is done, now close the SqlDataReader, the result, and the connection string
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+
+
+            return new JsonResult("PUT Department successfully operated.");
+
+        }
     }
 }
